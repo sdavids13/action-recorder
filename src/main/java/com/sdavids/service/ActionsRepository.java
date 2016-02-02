@@ -19,6 +19,8 @@ public interface ActionsRepository  extends JpaRepository<Action, Long> {
 
     Page<Action> findByUserAndObjectUri(String user, String objectUri, Pageable pageable);
 
+    Page<Action> findByUser(String user, Pageable pageable);
+
     @Modifying
     @Transactional
     @Query("delete from Action a where a.id = :id and a.user = :username")

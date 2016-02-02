@@ -90,6 +90,35 @@ public class ActionRecorderApplicationTests {
 	}
 
 	@Test
+	public void getPageableUserAction() throws Exception {
+		actionsRepository.save(Arrays.asList(
+				new Action(Verb.SAVE, ObjectType.BOOKMARK, "https://foo.com"),
+				new Action(Verb.PLAY, ObjectType.BOOKMARK, "https://foo2.com"),
+				new Action(Verb.SAVE, ObjectType.BOOKMARK, "https://foo3.com")));
+
+		mvc.perform(get("/").param("page", "0").param("size", "2").param("sort", "verb,objectUri"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$._embedded.actionList").value(hasSize(2)))
+			.andExpect(jsonPath("$._embedded.actionList.[0].verb").value("PLAY"))
+			.andExpect(jsonPath("$._embedded.actionList.[0].objectUri").value("https://foo2.com"))
+			.andExpect(jsonPath("$._embedded.actionList.[1].verb").value("SAVE"))
+			.andExpect(jsonPath("$._embedded.actionList.[1].objectUri").value("https://foo.com"))
+			.andExpect(jsonPath("$._links.first.href").value("http://localhost?page=0&size=2&sort=verb,objectUri,asc"))
+			.andExpect(jsonPath("$._links.next.href").value("http://localhost?page=1&size=2&sort=verb,objectUri,asc"))
+			.andExpect(jsonPath("$._links.prev.href").doesNotExist());
+
+		mvc.perform(get("/").param("page", "1").param("size", "2").param("sort", "verb,objectUri"))
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$._embedded.actionList").value(hasSize(1)))
+			.andExpect(jsonPath("$._embedded.actionList.[0].verb").value("SAVE"))
+			.andExpect(jsonPath("$._embedded.actionList.[0].objectUri").value("https://foo3.com"))
+			.andExpect(jsonPath("$._links.first.href").value("http://localhost?page=0&size=2&sort=verb,objectUri,asc"))
+			.andExpect(jsonPath("$._links.prev.href").value("http://localhost?page=0&size=2&sort=verb,objectUri,asc"))
+			.andExpect(jsonPath("$._links.next.href").doesNotExist());
+	}
+
+	@Test
 	public void deleteAction() throws Exception {
 		Action action = actionsRepository.saveAndFlush(new Action(Verb.SAVE, ObjectType.BOOKMARK, "https://foo.com"));
 		long oldActionCount = actionsRepository.count();

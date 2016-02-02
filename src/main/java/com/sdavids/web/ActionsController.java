@@ -5,6 +5,9 @@ import com.sdavids.domain.ObjectType;
 import com.sdavids.domain.Verb;
 import com.sdavids.service.ActionsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +32,12 @@ public class ActionsController {
 	}
 
 	@RequestMapping(path = "/", method = RequestMethod.GET)
-	public List<Action> getActions(@RequestParam("objectUri") String objectUri, Authentication authentication) {
+	public PagedResources<Action> getActions(Authentication authentication, Pageable pageable, PagedResourcesAssembler assembler) {
+		return assembler.toResource(actionsRepository.findByUser(authentication.getName(), pageable));
+	}
+
+	@RequestMapping(path = "/", method = RequestMethod.GET, params = "objectUri")
+	public List<Action> getActionsByObjectUri(@RequestParam("objectUri") String objectUri, Authentication authentication) {
 		return actionsRepository.findByUserAndObjectUri(authentication.getName(), objectUri);
 	}
 

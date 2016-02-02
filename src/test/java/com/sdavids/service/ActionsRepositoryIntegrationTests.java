@@ -36,13 +36,13 @@ public class ActionsRepositoryIntegrationTests {
 	@Test
 	public void findsFirstPageOfActions() {
 		Page<Action> actions = repository.findAll(new PageRequest(0, 10));
-		assertThat(actions.getTotalElements(), is(3L));
+		assertThat(actions.getTotalElements(), is(6L));
 	}
 
 	@Test
 	public void findByUserAndObjectUri() {
-		Page<Action> actions = repository.findByUserAndObjectUri("Test", "http://google.com", new PageRequest(0, 5));
-		assertThat(actions.getTotalElements(), is(1L));
+		Page<Action> actions = repository.findByUserAndObjectUri("user", "http://google.com", new PageRequest(0, 5));
+		assertThat(actions.getTotalElements(), is(2L));
 	}
 
 	@Test

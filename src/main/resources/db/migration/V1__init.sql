@@ -8,3 +8,6 @@ CREATE TABLE ACTION (
 );
 
 insert into ACTION (user, verb, object_uri, object_type) values ('user', 'PLAY', 'http://google.com', 'BOOKMARK');
+insert into ACTION (user, verb, object_uri, object_type) values ('user', 'SAVE', 'http://google.com', 'BOOKMARK');
+insert into ACTION (user, verb, object_uri, object_type) values ('user', 'PLAY', 'http://bing.com', 'BOOKMARK');
+insert into ACTION (user, verb, object_uri, object_type) values ('user', 'SAVE', 'http://bing.com', 'BOOKMARK');
