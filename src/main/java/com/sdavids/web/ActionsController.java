@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,22 +22,22 @@ public class ActionsController {
 	private ActionsRepository actionsRepository;
 
 	@ResponseStatus(value = HttpStatus.CREATED)
-	@RequestMapping(path = "/", method = RequestMethod.POST)
+	@RequestMapping(path = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public Action newAction(@RequestParam("verb") Verb verb, @RequestParam("objectType") ObjectType objectType, @RequestParam("objectUri") String objectUri) {
 		return actionsRepository.saveAndFlush(new Action(verb, objectType, objectUri));
 	}
 
-	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public void deleteAction(@PathVariable("id") Long id, Authentication authentication) {
 		actionsRepository.delete(id, authentication.getName());
 	}
 
-	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public PagedResources<Action> getActions(Authentication authentication, Pageable pageable, PagedResourcesAssembler assembler) {
 		return assembler.toResource(actionsRepository.findByUser(authentication.getName(), pageable));
 	}
 
-	@RequestMapping(path = "/", method = RequestMethod.GET, params = "objectUri")
+	@RequestMapping(path = "/", method = RequestMethod.GET, params = "objectUri", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public List<Action> getActionsByObjectUri(@RequestParam("objectUri") String objectUri, Authentication authentication) {
 		return actionsRepository.findByUserAndObjectUri(authentication.getName(), objectUri);
 	}
