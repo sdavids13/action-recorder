@@ -18,28 +18,28 @@ import java.util.List;
 @RestController
 public class ActionsController {
 
-	@Autowired
-	private ActionsRepository actionsRepository;
+    @Autowired
+    private ActionsRepository actionsRepository;
 
-	@ResponseStatus(value = HttpStatus.CREATED)
-	@RequestMapping(path = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public Action newAction(@RequestParam("verb") Verb verb, @RequestParam("objectType") ObjectType objectType, @RequestParam("objectUri") String objectUri) {
-		return actionsRepository.saveAndFlush(new Action(verb, objectType, objectUri));
-	}
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @RequestMapping(path = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public Action newAction(@RequestParam("verb") Verb verb, @RequestParam("objectType") ObjectType objectType, @RequestParam("objectUri") String objectUri) {
+        return actionsRepository.saveAndFlush(new Action(verb, objectType, objectUri));
+    }
 
-	@RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public void deleteAction(@PathVariable("id") Long id, Authentication authentication) {
-		actionsRepository.delete(id, authentication.getName());
-	}
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public void deleteAction(@PathVariable("id") Long id, Authentication authentication) {
+        actionsRepository.delete(id, authentication.getName());
+    }
 
-	@RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public PagedResources<Action> getActions(Authentication authentication, Pageable pageable, PagedResourcesAssembler assembler) {
-		return assembler.toResource(actionsRepository.findByUser(authentication.getName(), pageable));
-	}
+    @RequestMapping(path = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public PagedResources<Action> getActions(Authentication authentication, Pageable pageable, PagedResourcesAssembler assembler) {
+        return assembler.toResource(actionsRepository.findByUser(authentication.getName(), pageable));
+    }
 
-	@RequestMapping(path = "/", method = RequestMethod.GET, params = "objectUri", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public List<Action> getActionsByObjectUri(@RequestParam("objectUri") String objectUri, Authentication authentication) {
-		return actionsRepository.findByUserAndObjectUri(authentication.getName(), objectUri);
-	}
+    @RequestMapping(path = "/", method = RequestMethod.GET, params = "objectUri", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public List<Action> getActionsByObjectUri(@RequestParam("objectUri") String objectUri, Authentication authentication) {
+        return actionsRepository.findByUserAndObjectUri(authentication.getName(), objectUri);
+    }
 
 }

@@ -13,7 +13,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
-public interface ActionsRepository  extends JpaRepository<Action, Long> {
+public interface ActionsRepository extends JpaRepository<Action, Long> {
 
     List<Action> findByUserAndObjectUri(String user, String objectUri);
 

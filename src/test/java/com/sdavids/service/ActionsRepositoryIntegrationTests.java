@@ -30,30 +30,30 @@ import static org.junit.Assert.assertThat;
 @SpringApplicationConfiguration(ActionRecorderApplication.class)
 public class ActionsRepositoryIntegrationTests {
 
-	@Autowired
-	ActionsRepository repository;
+    @Autowired
+    ActionsRepository repository;
 
-	@Test
-	public void findsFirstPageOfActions() {
-		Page<Action> actions = repository.findAll(new PageRequest(0, 10));
-		assertThat(actions.getTotalElements(), is(6L));
-	}
+    @Test
+    public void findsFirstPageOfActions() {
+        Page<Action> actions = repository.findAll(new PageRequest(0, 10));
+        assertThat(actions.getTotalElements(), is(6L));
+    }
 
-	@Test
-	public void findByUserAndObjectUri() {
-		Page<Action> actions = repository.findByUserAndObjectUri("user", "http://google.com", new PageRequest(0, 5));
-		assertThat(actions.getTotalElements(), is(2L));
-	}
+    @Test
+    public void findByUserAndObjectUri() {
+        Page<Action> actions = repository.findByUserAndObjectUri("user", "http://google.com", new PageRequest(0, 5));
+        assertThat(actions.getTotalElements(), is(2L));
+    }
 
-	@Test
-	@WithMockUser("tester")
-	public void insert() {
-		long count = repository.count();
-		Action result = repository.saveAndFlush(new Action(Verb.SAVE, ObjectType.BOOKMARK, "http://foo.bar"));
-		assertThat(repository.count(), is(count + 1));
+    @Test
+    @WithMockUser("tester")
+    public void insert() {
+        long count = repository.count();
+        Action result = repository.saveAndFlush(new Action(Verb.SAVE, ObjectType.BOOKMARK, "http://foo.bar"));
+        assertThat(repository.count(), is(count + 1));
 
-		assertThat(result.getUser(), is("tester"));
-		assertThat(BigDecimal.valueOf(result.getCreateDate().getTime()), closeTo(BigDecimal.valueOf(new Date().getTime()), BigDecimal.valueOf(100)));
-	}
+        assertThat(result.getUser(), is("tester"));
+        assertThat(BigDecimal.valueOf(result.getCreateDate().getTime()), closeTo(BigDecimal.valueOf(new Date().getTime()), BigDecimal.valueOf(100)));
+    }
 
 }
