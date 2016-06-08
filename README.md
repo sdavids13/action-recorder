@@ -1,3 +1,6 @@
+Spring Boot JPA CRUD Example
+====================================
+### Example Usage
 ```
 $ git clone git@github.com:sdavids13/action-recorder.git
 $ cd action-recorder
@@ -40,3 +43,5 @@ $ curl --user user:example http://localhost:8080/?size=1 2> /dev/null | python -
 }
 ```
 
+### Admin endpoints
+For list of available admin endpoints for the running application see: http://localhost:8080/actuator
