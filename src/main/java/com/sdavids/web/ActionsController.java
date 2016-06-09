@@ -27,7 +27,8 @@ public class ActionsController {
         return actionsRepository.saveAndFlush(new Action(verb, objectType, objectUri));
     }
 
-    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
     public void deleteAction(@PathVariable("id") Long id, Authentication authentication) {
         actionsRepository.delete(id, authentication.getName());
     }

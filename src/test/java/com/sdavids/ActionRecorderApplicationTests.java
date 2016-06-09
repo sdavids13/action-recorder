@@ -22,11 +22,13 @@ import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -123,7 +125,9 @@ public class ActionRecorderApplicationTests {
         Action action = actionsRepository.saveAndFlush(new Action(Verb.SAVE, ObjectType.BOOKMARK, "https://foo.com"));
         long oldActionCount = actionsRepository.count();
 
-        mvc.perform(delete("/{id}", action.getId())).andExpect(status().isOk());
+        mvc.perform(delete("/{id}", action.getId()))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(isEmptyString()));
 
         assertThat("Action was not deleted", actionsRepository.count(), is(oldActionCount - 1));
     }
@@ -133,7 +137,9 @@ public class ActionRecorderApplicationTests {
         Action action = actionsRepository.saveAndFlush(new Action(Verb.SAVE, ObjectType.BOOKMARK, "https://foo.com"));
         long oldActionCount = actionsRepository.count();
 
-        mvc.perform(delete("/{id}", action.getId()).with(user("user"))).andExpect(status().isOk());
+        mvc.perform(delete("/{id}", action.getId()).with(user("user")))
+                .andExpect(status().isNoContent())
+                .andExpect(content().string(isEmptyString()));
 
         assertThat("Action should not have been deleted by a user who didn't create the action.",
                 actionsRepository.count(), is(oldActionCount));
