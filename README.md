@@ -8,7 +8,7 @@ $ ./gradlew bootRun
 ```
 
 ```
-$ curl --user user:example "http://localhost:8080/?size=1&page=2&sort=objectUri&sort=createDate,DESC" 2> /dev/null | python -m json.tool
+$ curl --user user:example -X GET "http://localhost:8080/?size=1&page=2&sort=objectUri&sort=createDate,DESC" 2> /dev/null | python -m json.tool
 {
     "_embedded": {
         "actionList": [
@@ -71,23 +71,6 @@ $ curl --user user:example -X POST -d "verb=MARK_AS_LIKED" -d "objectType=BOOKMA
 ```
 
 ```
-$ curl --user user:example http://localhost:8080/5 2> /dev/null | python -m json.tool
-{
-    "_links": {
-        "self": {
-            "href": "http://localhost:8080/5"
-        }
-    },
-    "createDate": "2016-06-09T03:39:51Z",
-    "id": 5,
-    "objectType": "BOOKMARK",
-    "objectUri": "https://www.bti360.com",
-    "user": "user",
-    "verb": "MARK_AS_LIKED"
-}
-```
-
-```
 $ curl --user user:example -X GET "http://localhost:8080/?objectUri=https://www.bti360.com" 2> /dev/null | python -m json.tool
 {
     "_embedded": {
@@ -118,6 +101,23 @@ $ curl --user user:example -X GET "http://localhost:8080/?objectUri=https://www.
         "totalElements": 1,
         "totalPages": 1
     }
+}
+```
+
+```
+$ curl --user user:example -X GET http://localhost:8080/5 2> /dev/null | python -m json.tool
+{
+    "_links": {
+        "self": {
+            "href": "http://localhost:8080/5"
+        }
+    },
+    "createDate": "2016-06-09T03:39:51Z",
+    "id": 5,
+    "objectType": "BOOKMARK",
+    "objectUri": "https://www.bti360.com",
+    "user": "user",
+    "verb": "MARK_AS_LIKED"
 }
 ```
 
