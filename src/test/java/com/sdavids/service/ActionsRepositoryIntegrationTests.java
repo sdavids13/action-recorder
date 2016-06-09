@@ -10,9 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
 
 import java.math.BigDecimal;
@@ -54,6 +56,16 @@ public class ActionsRepositoryIntegrationTests {
 
         assertThat(result.getUser(), is("tester"));
         assertThat(BigDecimal.valueOf(result.getCreateDate().getTime()), closeTo(BigDecimal.valueOf(new Date().getTime()), BigDecimal.valueOf(100)));
+    }
+
+    @Test(expected = AccessDeniedException.class)
+    public void cannotAccessOtherUserActions() {
+        repository.findOne(1L, "tester");
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void missingAction() {
+        repository.findOne(1000000L, "tester");
     }
 
 }

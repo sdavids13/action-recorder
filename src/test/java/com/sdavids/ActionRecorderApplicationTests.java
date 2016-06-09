@@ -80,15 +80,15 @@ public class ActionRecorderApplicationTests {
 
         mvc.perform(get("/").param("objectUri", uri))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(hasSize(2)))
-                .andExpect(jsonPath("$[0].user").value("tester"))
-                .andExpect(jsonPath("$[0].verb").value("SAVE"))
-                .andExpect(jsonPath("$[0].objectType").value("BOOKMARK"))
-                .andExpect(jsonPath("$[0].objectUri").value(uri))
-                .andExpect(jsonPath("$[1].user").value("tester"))
-                .andExpect(jsonPath("$[1].verb").value("PLAY"))
-                .andExpect(jsonPath("$[1].objectType").value("BOOKMARK"))
-                .andExpect(jsonPath("$[1].objectUri").value(uri));
+                .andExpect(jsonPath("$._embedded.actionList").value(hasSize(2)))
+                .andExpect(jsonPath("$._embedded.actionList[0].user").value("tester"))
+                .andExpect(jsonPath("$._embedded.actionList[0].verb").value("SAVE"))
+                .andExpect(jsonPath("$._embedded.actionList[0].objectType").value("BOOKMARK"))
+                .andExpect(jsonPath("$._embedded.actionList[0].objectUri").value(uri))
+                .andExpect(jsonPath("$._embedded.actionList[1].user").value("tester"))
+                .andExpect(jsonPath("$._embedded.actionList[1].verb").value("PLAY"))
+                .andExpect(jsonPath("$._embedded.actionList[1].objectType").value("BOOKMARK"))
+                .andExpect(jsonPath("$._embedded.actionList[1].objectUri").value(uri));
     }
 
     @Test
